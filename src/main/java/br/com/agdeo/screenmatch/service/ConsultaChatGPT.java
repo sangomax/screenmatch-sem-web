@@ -5,7 +5,7 @@ import com.theokanning.openai.service.OpenAiService;
 
 public class ConsultaChatGPT {
     public static String obterTraducao(String texto) {
-        OpenAiService service = new OpenAiService("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");
+        OpenAiService service = new OpenAiService("key gpt");
 
         CompletionRequest requisicao = CompletionRequest.builder()
                 .model("gpt-3.5-turbo-instruct")
