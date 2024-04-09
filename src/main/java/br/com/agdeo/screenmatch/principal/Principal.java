@@ -1,9 +1,6 @@
 package br.com.agdeo.screenmatch.principal;
 
-import br.com.agdeo.screenmatch.model.DadosEpisodio;
-import br.com.agdeo.screenmatch.model.DadosSerie;
-import br.com.agdeo.screenmatch.model.DadosTemporada;
-import br.com.agdeo.screenmatch.model.Episodio;
+import br.com.agdeo.screenmatch.model.*;
 import br.com.agdeo.screenmatch.service.ConsumoAPI;
 import br.com.agdeo.screenmatch.service.ConverteDados;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -60,7 +57,14 @@ public class Principal {
     }
 
     private void listarSeriesBuscadas() {
-        dadosSeries.forEach(System.out::println);
+        List<Serie> series = new ArrayList<>();
+        series = dadosSeries.stream()
+                        .map(s -> new Serie(s))
+                                .collect(Collectors.toList());
+
+        series.stream()
+                .sorted(Comparator.comparing(Serie::getGenero))
+                .forEach(System.out::println);
     }
 
     private void buscarSerieWeb() {
@@ -89,13 +93,6 @@ public class Principal {
         temporadas.forEach(System.out::println);
     }
 
-//    public static Categoria fromPortugues(String text) {
-//        for (Categoria categoria : Categoria.values()) {
-//            if (categoria.categoriaPortugues.equalsIgnoreCase(text)) {
-//                return categoria;
-//            }
-//        }
-//        throw new IllegalArgumentException("Nenhuma categoria encontrada para a string fornecida: " + text);
-//    }
+
 
 }
