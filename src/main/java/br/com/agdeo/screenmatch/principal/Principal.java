@@ -1,6 +1,7 @@
 package br.com.agdeo.screenmatch.principal;
 
 import br.com.agdeo.screenmatch.model.*;
+import br.com.agdeo.screenmatch.repository.SerieRepository;
 import br.com.agdeo.screenmatch.service.ConsumoAPI;
 import br.com.agdeo.screenmatch.service.ConverteDados;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -15,12 +16,17 @@ public class Principal {
 
     private final String ENDERECO = "https://www.omdbapi.com/?t=";
     private final String API_KEY = "&apikey=30dabf58";
+    private SerieRepository repositorio;
 
     private Scanner leitura = new Scanner(System.in);
     private ConsumoAPI consumo = new ConsumoAPI();
     private ConverteDados conversor = new ConverteDados();
 
     private List<DadosSerie> dadosSeries = new ArrayList<>();
+
+    public Principal(SerieRepository repositorio) {
+        this.repositorio = repositorio;
+    }
 
     public void exibirMenu() {
         var opcao = -1;
@@ -57,10 +63,7 @@ public class Principal {
     }
 
     private void listarSeriesBuscadas() {
-        List<Serie> series = new ArrayList<>();
-        series = dadosSeries.stream()
-                        .map(s -> new Serie(s))
-                                .collect(Collectors.toList());
+        List<Serie> series = repositorio.findAll();
 
         series.stream()
                 .sorted(Comparator.comparing(Serie::getGenero))
@@ -69,8 +72,10 @@ public class Principal {
 
     private void buscarSerieWeb() {
         DadosSerie dados = getDadosSerie();
-        dadosSeries.add(dados);
-        System.out.println(dados);
+        Serie serie = new Serie(dados);
+//        dadosSeries.add(dados);
+        repositorio.save(serie);
+        System.out.println(serie);
     }
 
     private DadosSerie getDadosSerie() {
