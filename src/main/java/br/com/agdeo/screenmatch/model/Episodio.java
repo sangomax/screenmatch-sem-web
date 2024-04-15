@@ -1,32 +1,42 @@
 package br.com.agdeo.screenmatch.model;
 
-import com.fasterxml.jackson.annotation.JsonAlias;
+import jakarta.persistence.*;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 
+@Entity
+@Table(name = "episodios")
 public class Episodio {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private Integer temporada;
     private String titulo;
     private Integer numeroEpisodio;
     private Double avaliacao;
     private LocalDate dataLancamento;
+    @ManyToOne
+    private Serie serie;
 
     public Episodio(Integer numeroTemporada, DadosEpisodio dadosEpisodio) {
         this.temporada = numeroTemporada;
         this.titulo = dadosEpisodio.titulo();
         this.numeroEpisodio = dadosEpisodio.numeroEpisodio();
-        try{
+        try {
             this.avaliacao = Double.valueOf(dadosEpisodio.avaliacao());
-        }catch (NumberFormatException ex) {
+        } catch (NumberFormatException ex) {
             this.avaliacao = 0.0;
         }
-        try{
+        try {
             this.dataLancamento = LocalDate.parse(dadosEpisodio.dataLancamento());
-        }catch (DateTimeParseException ex) {
+        } catch (DateTimeParseException ex) {
             this.dataLancamento = null;
         }
+    }
+
+    public Episodio() {
     }
 
     public Integer getTemporada() {
@@ -69,13 +79,21 @@ public class Episodio {
         this.dataLancamento = dataLancamento;
     }
 
+    public Serie getSerie() {
+        return serie;
+    }
+
+    public void setSerie(Serie serie) {
+        this.serie = serie;
+    }
+
     @Override
     public String toString() {
         return
                 "temporada=" + temporada +
-                ", titulo='" + titulo + '\'' +
-                ", numeroEpisodio=" + numeroEpisodio +
-                ", avaliacao=" + avaliacao +
-                ", dataLancamento=" + dataLancamento ;
+                        ", titulo='" + titulo + '\'' +
+                        ", numeroEpisodio=" + numeroEpisodio +
+                        ", avaliacao=" + avaliacao +
+                        ", dataLancamento=" + dataLancamento;
     }
 }
